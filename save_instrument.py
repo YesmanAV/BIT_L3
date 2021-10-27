@@ -5,14 +5,14 @@ from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
 
 
 def add_to_origin_table(file_name):
-    add_to_table(file_name, "Original")
+    add_to_any_table(file_name, "Original")
 
 
 def add_to_edited_table(file_name):
-    add_to_table(file_name, "Edited")
+    add_to_any_table(file_name, "Edited")
 
 
-def add_to_table(file_name, table_name):
+def add_to_any_table(file_name, table_name):
     try:
         engine = create_engine('sqlite:///Save_image.db', echo=False)
         conn = engine.connect()
@@ -41,14 +41,14 @@ def add_to_table(file_name, table_name):
 
 
 def save_original_image(image_name):
-    save_image(image_name, "Original")
+    save_any_image(image_name, "Original")
 
 
 def save_edited_image(image_name):
-    save_image(image_name, "Edited")
+    save_any_image(image_name, "Edited")
 
 
-def save_image(file_name, path):
+def save_any_image(file_name, path):
     try:
         image = Image.open(file_name)
         if os.path.exists(path) == 0:
@@ -67,9 +67,3 @@ def save_image(file_name, path):
         image.save(path)
     except Exception as e:
         print("Error!", e.__class__, "occurred.")
-
-
-add_to_origin_table("Image.png")
-add_to_edited_table("Image.png")
-save_original_image("Image.png")
-save_edited_image("Image.png")
