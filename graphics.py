@@ -13,6 +13,11 @@ class MyWindow(Frame):
         btn2 = Button(text="Нанести водяной знак", background="green", foreground="black",
                       padx="200", pady="7", font="13")
         btn2.place(x=760, y=20)
+        box = Listbox(width=90, height=30)
+        box.place(x=50, y=100)
+        scroll = Scrollbar(command=box.yview)
+        scroll.pack(side=LEFT, fill=Y)
+        box.config(yscrollcommand=scroll.set)
 
     def open_img(self):
         path = filedialog.askopenfilename(title='open')
@@ -20,7 +25,7 @@ class MyWindow(Frame):
             img = ImageTk.PhotoImage(Image.open(path).resize((750, 400)))
             panel = Label(image=img)
             panel.image = img
-            panel.place(x=660, y=150)
+            panel.place(x=670, y=100)
         else:
             print('Картинка не выбрана')
 
