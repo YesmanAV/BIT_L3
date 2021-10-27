@@ -67,3 +67,6 @@ def save_any_image(file_name, path):
         image.save(path)
     except Exception as e:
         print("Error!", e.__class__, "occurred.")
+
+
+# test()
