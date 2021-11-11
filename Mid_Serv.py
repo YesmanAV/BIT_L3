@@ -10,39 +10,38 @@ def get_watermark_image(img):
         test_url = addr + '/api/test'
         content_type = 'image/jpeg'
         headers = {'content-type': content_type}
-
-        r = requests.post(test_url, data=img.tostring(), headers=headers)
+        _, img_encoded = cv2.imencode('.jpg', img)
+        r = requests.post(test_url, data=img_encoded.tostring(), headers=headers)
         r.raise_for_status()
         nparr = np.fromstring(r.content, np.uint8)
         im = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         return im
+    except requests.exceptions.HTTPError as e:
+        return e.response.status_code
+    except requests.exceptions.ConnectionError:
+        return "ConnectionError"
+    except requests.exceptions.Timeout:
+        return "TimeoutError"
+    except requests.exceptions.RequestException:
+        return "OtherError"
 
-    except requests.exceptions.HTTPError as errh:
-        print("Http Error:", errh)
-    except requests.exceptions.ConnectionError as errc:
-        print("Error Connecting:", errc)
-    except requests.exceptions.Timeout as errt:
-        print("Timeout Error:", errt)
-    except requests.exceptions.RequestException as err:
-        print("OOps: Something Else", err)
-    raise SystemExit(err)
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 
 
 @app.route('/api/test', methods=['POST'])
 def test():
     r = request
-    print(1)
     nparr = np.fromstring(r.data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     # resize here
+
     img_resized = img
-    print(2)
     result_image = get_watermark_image(img_resized)
-    print(3)
+    if isinstance(result_image, (int, str)):
+        return Response(status=result_image)
     return Response(result_image.tostring())
 
 
