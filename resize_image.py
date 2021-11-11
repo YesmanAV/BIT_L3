@@ -13,3 +13,10 @@ def resize_img(file):
 
     x = int((white_img.size[0] - width) / 2)
     y = int((white_img.size[1] - height) / 2)
+
+    white_img.paste(img, (x, y))
+    return white_img
+# 
+# if __name__ == '__main__':
+#     imgage = resize_img('depositphotos_107694484-stock-photo-little-boy.jpg')
+#     imgage.save("resized_img.jpg")
