@@ -8,3 +8,5 @@ def resize_img(file):
     while (white_width < width or white_height < height):
         white_height += 9
         white_width += 16
+        
+    white_img = Image.new('RGB', (white_width, white_height), 'white')
