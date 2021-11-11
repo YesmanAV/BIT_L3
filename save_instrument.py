@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from PIL import Image
+from cv2 import cv2
 from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
 
 
@@ -40,17 +40,18 @@ def add_to_any_table(file_name, table_name):
         print("Error!", e.__class__, "occurred.")
 
 
-def save_original_image(image_name):
-    save_any_image(image_name, "Original")
+def save_original_image(image, image_name):
+    counter = save_any_image(image, image_name, "Original", 1)
+    print(counter)
+    return counter
 
 
-def save_edited_image(image_name):
-    save_any_image(image_name, "Edited")
+def save_edited_image(image, image_name):
+    save_any_image(image, image_name, "Edited", 2)
 
 
-def save_any_image(file_name, path):
+def save_any_image(image, file_name, path, num):
     try:
-        image = Image.open(file_name)
         if os.path.exists(path) == 0:
             os.mkdir(path)
             os.chmod(path, 0o777)
@@ -61,12 +62,13 @@ def save_any_image(file_name, path):
         for i in list_of_files:
             if i == file_name or i == file_name[:extension] + str(counter) + file_name[extension:]:
                 counter = counter + 1
-        if counter > 0:
+        if counter >= 0:
             file_name = file_name[:extension] + str(counter) + file_name[extension:]
         path = os.path.join(directory, file_name)
-        image.save(path)
+        if num == 1:
+            cv2.imwrite(path, image)
+        else:
+            image.save(path)
     except Exception as e:
         print("Error!", e.__class__, "occurred.")
-
-
-# test()
+    return counter
