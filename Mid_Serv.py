@@ -1,6 +1,7 @@
 from flask import Flask, request, Response
 import numpy as np
 from cv2 import cv2
+from resize_image import resize_img
 import requests
 
 
@@ -35,10 +36,7 @@ def test():
     r = request
     nparr = np.fromstring(r.data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    # resize here
-
-    img_resized = img
+    img_resized = resize_img(img)
     result_image = get_watermark_image(img_resized)
     if isinstance(result_image, (int, str)):
         return Response(status=result_image)
