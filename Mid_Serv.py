@@ -3,21 +3,23 @@ import numpy as np
 from cv2 import cv2
 from resize_image import resize_img
 import requests
-from save_instrument import save_original_image
+from save_instrument import save_original_image, add_to_origin_table
 import os
 
 
-def get_watermark_image(img):
+def get_watermark_image(filepath):
     try:
         addr = 'http://localhost:5000'
         test_url = addr + '/api/test'
         content_type = 'image/jpeg'
         headers = {'content-type': content_type}
+        img = cv2.imread(filepath)
         _, img_encoded = cv2.imencode('.jpg', img)
         r = requests.post(test_url, data=img_encoded.tostring(), headers=headers)
         r.raise_for_status()
         nparr = np.fromstring(r.content, np.uint8)
         im = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        cv2.imwrite(filepath, im)
         return im
     except requests.exceptions.HTTPError as e:
         print(e.response.status_code)
@@ -41,18 +43,12 @@ def test():
     img_resized = resize_img(img)
 
     filename = 'tmp.jpg'
-    counter = save_original_image(img_resized, filename)
-    extension = filename.find('.')
-    path_to_original = os.path.abspath(os.curdir) + '\\Original\\' + filename[:extension] + str(counter) + filename[
-                                                                                                           extension:]
-    imgnew = cv2.imread(path_to_original)
-    result_image = get_watermark_image(imgnew)
+    path = os.curdir + filename
+    cv2.imwrite(path, img_resized)
 
-    counter = save_original_image(result_image, filename)
-    extension = filename.find('.')
-    path_to_original = os.path.abspath(os.curdir) + '\\Original\\' + filename[:extension] + str(counter) + filename[
-                                                                                                           extension:]
-    img2 = cv2.imread(path_to_original)
+    result_image = get_watermark_image(path)
+
+    img2 = cv2.imread(path)
     _, img_encoded = cv2.imencode('.jpg', img2)
     return Response(img_encoded.tostring())
 
