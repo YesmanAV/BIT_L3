@@ -10,8 +10,8 @@ def watermark_photo(input_image_path, watermark_image_path, output_name, positio
     transparent = Image.new('RGBA', (width, height), (0, 0, 0, 0))
     transparent.paste(base_image, (0, 0))
     width_new, height_new = find_size(width, height, widthWM, heightWM)
-    transparent.paste(watermark.resize((height_new, width_new), Image.ANTIALIAS), position,
-                      mask=watermark.resize((height_new, width_new), Image.ANTIALIAS))
+    transparent.paste(watermark.resize((width_new, height_new), Image.ANTIALIAS), position,
+                      mask=watermark.resize((width_new, height_new), Image.ANTIALIAS))
     save_edited_image(transparent.convert('RGB'), output_name)
     add_to_edited_table(output_name)
 
