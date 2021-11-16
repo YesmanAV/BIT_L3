@@ -2,7 +2,7 @@ from flask import Flask, request, Response
 import numpy as np
 from cv2 import cv2
 from Watermark import watermark_photo
-from save_instruments import save_original_image, add_to_origin_table
+from save_instrument import save_original_image, add_to_origin_table
 import os
 
 # Creating flask server
