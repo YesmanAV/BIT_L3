@@ -22,13 +22,13 @@ def get_watermark_image(filepath):
         cv2.imwrite(filepath, im)
         return im
     except requests.exceptions.HTTPError as e:
-        print(e.response.status_code)
+        return e.response.status_code
     except requests.exceptions.ConnectionError:
-        print("ConnectionError")
+        return "ConnectionError"
     except requests.exceptions.Timeout:
-        print("TimeoutError")
+        return "TimeoutError"
     except requests.exceptions.RequestException:
-        print("OtherError")
+        return "OtherError"
 
 
 app = Flask(__name__)
@@ -46,8 +46,9 @@ def test():
     path = os.curdir + filename
     cv2.imwrite(path, img_resized)
 
-    result_image = get_watermark_image(path)
-
+    result = get_watermark_image(path)
+    if isinstance(result, (int, str)):
+        return Response(status=result)
     img2 = cv2.imread(path)
     _, img_encoded = cv2.imencode('.jpg', img2)
     return Response(img_encoded.tostring())
