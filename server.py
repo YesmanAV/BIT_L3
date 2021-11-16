@@ -7,5 +7,12 @@ import os
 # Creating flask server
 app = Flask(__name__)
 app.debug = False
+
+@app.route('/api/test', methods=['POST'])
+def test():
+    r = request
+    return Response(img_encoded.tostring())
+
+
 # run flask server
 app.run(host="0.0.0.0", port=5000)
