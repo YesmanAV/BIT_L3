@@ -3,7 +3,6 @@ import numpy as np
 from cv2 import cv2
 from resize_image import resize_img
 import requests
-from save_instrument import save_original_image, add_to_origin_table
 import os
 
 
