@@ -1,7 +1,9 @@
+from cv2 import cv2
 from PIL import Image
 
-def resize_img(file):
-    img = Image.open(file)
+def resize_img(img_cv2):
+    tmp_img = cv2.cvtColor(img_cv2, cv2.COLOR_BGR2RGB)
+    img = Image.fromarray(tmp_img)
     width, height = img.size
     white_width = 0
     white_height = 0
@@ -16,7 +18,8 @@ def resize_img(file):
 
     white_img.paste(img, (x, y))
     return white_img
-# 
+#
 # if __name__ == '__main__':
-#     imgage = resize_img('depositphotos_107694484-stock-photo-little-boy.jpg')
+#     imgfsdfa = cv2.imread("depositphotos_107694484-stock-photo-little-boy.jpg")
+#     imgage = resize_img(imgfsdfa)
 #     imgage.save("resized_img.jpg")
